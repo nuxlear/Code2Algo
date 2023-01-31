@@ -94,7 +94,10 @@ if __name__ == '__main__':
 
     # print(source_data[0])
 
-    os.makedirs('outputs', exist_ok=True)
+    dir_name = 'pseudo_all'
+    os.makedirs(dir_name, exist_ok=True)
+
+    json_output_path = Path('singles.json')
 
     results = {}
     for i, (pid, codes) in enumerate(sources.items()):
@@ -103,16 +106,16 @@ if __name__ == '__main__':
             print(f'Skip missing repo [{repo}] - {pid}')
             continue
 
-        output_path = Path('outputs', f'{pid}.json')
-        if output_path.exists():
-            print(f'Skipping existing file: [{str(output_path)}]')
-            continue
+        # output_path = Path(dir_name, f'{pid}.json')
+        # if output_path.exists():
+        #     print(f'Skipping existing file: [{str(output_path)}]')
+        #     continue
 
         src = codes['wrong']
         tgt = codes['correct']
 
-        context = f'''## Original Code\n\n{src}\n\n## Changed Code\n\n{tgt}\n\n'''
-
+        # context = f'''## Original Code\n\n{src}\n\n## Changed Code\n\n{tgt}\n\n'''
+        #
         # prompt = f'''{context}## Explain the differences between the codes above: \n\n"""'''
         # res = generate_explanation(prompt, num_results=4, stop=['\n\n', '"""', '##', '\n#'])
         # diff_explain = [x.text for x in res] if res is not None else None
@@ -133,28 +136,32 @@ if __name__ == '__main__':
         # error_explain = [x.text for x in res] if res is not None else None
         # # print(error_explain)
 
-        prompt = f'''## The Student's Code is below:\n\n{src}## Write the Pseudo-code of the code which can explain its algorithm. \n\n## You can only use English sentences and indentation for describing Pseudo-code: \n"""'''
-        res = generate_explanation(prompt, num_results=4, stop=['\n\n', '"""', '##', '\n#'])
-        pseudo = [x.text for x in res] if res is not None else None
-        print(pseudo)
+        # prompt = f'''## The Python 3 Code is below:\n\n{src}\n\n## The Pseudo-code who explains the code's algorithm above. \n\n## The pseudo-code only contains English sentences and indentation for its structures: \n"""\n1. '''
+        # res = generate_explanation(prompt, num_results=4, stop=['\n\n', '"""', '##', '\n#'])
+        # # res = generate_explanation(prompt, num_results=4)
+        # pseudo_src = [x.text for x in res] if res is not None else None
+        # # print(pseudo_src)
+        #
+        # prompt = f'''## The Python 3 Code is below:\n\n{tgt}\n\n## The Pseudo-code who explains the code's algorithm above. \n\n## The pseudo-code only contains English sentences and indentation for its structures: \n"""\n1. '''
+        # res = generate_explanation(prompt, num_results=4, stop=['\n\n', '"""', '##', '\n#'])
+        # # res = generate_explanation(prompt, num_results=4)
+        # pseudo_tgt = [x.text for x in res] if res is not None else None
+        # # print(pseudo_tgt)
 
         result = {
             'id': pid,
             'repo': repo,
             'src': src,
             'tgt': tgt,
-            'diff': diff_explain,
-            'change': change_explain,
-            'err_find': error_find,
-            'err_explain': error_explain,
+            # 'pseudo_src': pseudo_src,
+            # 'pseudo_tgt': pseudo_tgt,
         }
         results[pid] = result
 
-        with open(output_path, 'w', encoding='utf-8') as f:
-            json.dump(result, f, indent=3, ensure_ascii=False)
+        # with open(output_path, 'w', encoding='utf-8') as f:
+        #     json.dump(result, f, indent=4, ensure_ascii=False)
+        #
+        # print(f'Successfully Saved [{pid}] - ({i+1}/{len(sources)})')
 
-        print(f'Successfully Saved [{pid}] - ({i+1}/{len(sources)})')
-
-    # output_path = Path('outputs', f'results.json')
-    # with open(output_path, 'w', encoding='utf-8') as f:
-    #     json.dump(results, f, indent=3, ensure_ascii=False)
+    with open(json_output_path, 'w', encoding='utf-8') as f:
+        json.dump(results, f, indent=4, ensure_ascii=False)

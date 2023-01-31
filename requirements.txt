@@ -1,0 +1,13 @@
+# Must be installed for running demo
+git+https://github.com/mmabrouk/chatgpt-wrapper     # chatgpt_wrapper
+torch>=1.12
+transformers
+openai
+gradio
+
+# Need to do reproducing / analysis
+tqdm
+numpy
+pandas
+seaborn
+matplotlib
