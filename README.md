@@ -95,4 +95,5 @@ python demo.py --openai_key=[OPENAI_API_KEY]
 ## Contributor
 
 - Junwon Hwang
-- Jinseok Heo
+- Jinseok Heo (mrhjs225@gmail.com)
+- Eunseok Lee (leees@skku.edu)
